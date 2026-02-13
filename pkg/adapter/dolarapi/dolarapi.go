@@ -2,19 +2,20 @@ package dolarapi
 
 import (
 	"arbolito/pkg/model"
+	"arbolito/pkg/repository"
 	"encoding/json"
 	"net/http"
 )
 
-type DolarAPI struct{
+type dolarapiRepository struct{
 	URL string
 }
 
-func NewDolarAPI(url string) *DolarAPI {
-	return &DolarAPI{URL: url}
+func NewDolarAPIRepository(url string) repository.RateRepository {
+	return &dolarapiRepository{URL: url}
 }
 
-func (d *DolarAPI) GetRate() (*model.Rate, error) {
+func (d *dolarapiRepository) GetRate() (*model.Rate, error) {
 	resp, err := http.Get(d.URL)
 	if err != nil {
 		return nil, err

@@ -2,19 +2,20 @@ package bluelytics
 
 import (
 	"arbolito/pkg/model"
+	"arbolito/pkg/repository"
 	"encoding/json"
 	"net/http"
 )
 
-type BluelyticsAPI struct{
+type bluelyticsRepository struct{
 	URL string
 }
 
-func NewBluelyticsAPI(url string) *BluelyticsAPI {
-	return &BluelyticsAPI{URL: url}
+func NewBluelyticsRepository(url string) repository.RateRepository {
+	return &bluelyticsRepository{URL: url}
 }
 
-func (b *BluelyticsAPI) GetRate() (*model.Rate, error) {
+func (b *bluelyticsRepository) GetRate() (*model.Rate, error) {
 	resp, err := http.Get(b.URL)
 	if err != nil {
 		return nil, err

@@ -5,10 +5,13 @@ import (
 	"arbolito/pkg/adapter/criptoya"
 	"arbolito/pkg/adapter/dolarapi"
 	"arbolito/pkg/config"
+	"arbolito/pkg/db"
 	"arbolito/pkg/handler"
 	"arbolito/pkg/repository"
+	"arbolito/pkg/repository/caching"
 	"arbolito/pkg/service"
 	"fmt"
+	"log"
 	"net/http"
 )
 
@@ -16,10 +19,23 @@ func main() {
 	// Load configuration
 	cfg := config.LoadConfig()
 
+	// Initialize MongoDB client
+	mongoClient, err := db.NewMongoClient(cfg.MongoURI)
+	if err != nil {
+		log.Fatalf("Failed to connect to MongoDB: %v", err)
+	}
+	mongoDB := mongoClient.Database(cfg.MongoDBName)
+
+	// Initialize caching repository
+	cachingRepo, err := caching.NewMongoCachingRepository(mongoDB)
+	if err != nil {
+		log.Fatalf("Failed to create caching repository: %v", err)
+	}
+
 	// Initialize adapters
-	dolarAPI := dolarapi.NewDolarAPI(cfg.DolarAPIURL)
-	bluelyticsAPI := bluelytics.NewBluelyticsAPI(cfg.BluelyticsAPIURL)
-	criptoyaAPI := criptoya.NewCriptoyaAPI(cfg.CriptoyaAPIURL)
+	dolarAPI := dolarapi.NewDolarAPIRepository(cfg.DolarAPIURL)
+	bluelyticsAPI := bluelytics.NewBluelyticsRepository(cfg.BluelyticsAPIURL)
+	criptoyaAPI := criptoya.NewCriptoyaRepository(cfg.CriptoyaAPIURL)
 
 	// Create a list of repositories
 	repos := []repository.RateRepository{
@@ -29,7 +45,7 @@ func main() {
 	}
 
 	// Initialize service
-	rateService := service.NewRateService(repos)
+	rateService := service.NewRateService(repos, cachingRepo)
 
 	// Initialize handler
 	rateHandler := handler.NewRateHandler(rateService)

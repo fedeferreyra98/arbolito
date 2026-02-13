@@ -7,10 +7,10 @@ import (
 )
 
 type RateHandler struct {
-	service *service.RateService
+	service service.RateService
 }
 
-func NewRateHandler(service *service.RateService) *RateHandler {
+func NewRateHandler(service service.RateService) *RateHandler {
 	return &RateHandler{service: service}
 }
 
