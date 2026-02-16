@@ -2,6 +2,6 @@ package repository
 
 import "arbolito/pkg/model"
 
-type RateRepository interface {
+type RateApiAdapter interface {
 	GetRate() (*model.Rate, error)
 }

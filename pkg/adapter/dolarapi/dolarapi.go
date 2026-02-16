@@ -11,7 +11,7 @@ type dolarapiAdapter struct {
 	URL string
 }
 
-func NewDolarAPIAdapter(url string) repository.RateRepository {
+func NewDolarAPIAdapter(url string) repository.RateApiAdapter {
 	return &dolarapiAdapter{URL: url}
 }
 

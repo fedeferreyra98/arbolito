@@ -12,7 +12,7 @@ type criptoyaAdapter struct {
 	URL string
 }
 
-func NewCriptoyaAdapter(url string) repository.RateRepository {
+func NewCriptoyaAdapter(url string) repository.RateApiAdapter {
 	return &criptoyaAdapter{URL: url}
 }
 

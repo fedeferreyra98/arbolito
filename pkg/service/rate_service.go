@@ -3,18 +3,19 @@ package service
 import (
 	"arbolito/pkg/model"
 	"arbolito/pkg/repository"
+	"fmt"
 	"time"
 )
 
 type rateService struct {
-	repos           []repository.RateRepository
+	adapters        []repository.RateApiAdapter
 	cachingRepo     repository.CachingRepository
 	cacheTTLMinutes time.Duration
 }
 
-func NewRateService(repos []repository.RateRepository, cachingRepo repository.CachingRepository) RateService {
+func NewRateService(adapters []repository.RateApiAdapter, cachingRepo repository.CachingRepository) RateService {
 	return &rateService{
-		repos:           repos,
+		adapters:        adapters,
 		cachingRepo:     cachingRepo,
 		cacheTTLMinutes: 15 * time.Minute,
 	}
@@ -33,8 +34,8 @@ func (s *rateService) GetAverageRate() (*model.Rate, error) {
 	var totalBuy, totalSell float64
 	var count int
 
-	for _, repo := range s.repos {
-		rate, err := repo.GetRate()
+	for _, adapter := range s.adapters {
+		rate, err := adapter.GetRate()
 		if err == nil {
 			totalBuy += rate.Buy
 			totalSell += rate.Sell
@@ -57,8 +58,7 @@ func (s *rateService) GetAverageRate() (*model.Rate, error) {
 	// Save to cache
 	err = s.cachingRepo.SetRate(averageRate)
 	if err != nil {
-		// Log the error but don't fail the request
-		// log.Printf("Failed to cache rate: %v", err)
+		fmt.Println("Failed to cache rate:", err)
 	}
 
 	return averageRate, nil

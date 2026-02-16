@@ -38,7 +38,7 @@ func main() {
 	criptoyaAPI := criptoya.NewCriptoyaAdapter(cfg.CriptoyaAPIURL)
 
 	// Create a list of repositories
-	repos := []repository.RateRepository{
+	repos := []repository.RateApiAdapter{
 		dolarAPI,
 		bluelyticsAPI,
 		criptoyaAPI,

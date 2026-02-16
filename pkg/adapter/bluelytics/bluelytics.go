@@ -11,7 +11,7 @@ type bluelyticsAdapter struct {
 	URL string
 }
 
-func NewBluelyticsAdapter(url string) repository.RateRepository {
+func NewBluelyticsAdapter(url string) repository.RateApiAdapter {
 	return &bluelyticsAdapter{URL: url}
 }
 
