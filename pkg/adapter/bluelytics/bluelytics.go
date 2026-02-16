@@ -7,15 +7,15 @@ import (
 	"net/http"
 )
 
-type bluelyticsRepository struct{
+type bluelyticsAdapter struct {
 	URL string
 }
 
-func NewBluelyticsRepository(url string) repository.RateRepository {
-	return &bluelyticsRepository{URL: url}
+func NewBluelyticsAdapter(url string) repository.RateRepository {
+	return &bluelyticsAdapter{URL: url}
 }
 
-func (b *bluelyticsRepository) GetRate() (*model.Rate, error) {
+func (b *bluelyticsAdapter) GetRate() (*model.Rate, error) {
 	resp, err := http.Get(b.URL)
 	if err != nil {
 		return nil, err
@@ -24,7 +24,7 @@ func (b *bluelyticsRepository) GetRate() (*model.Rate, error) {
 
 	var data struct {
 		Blue struct {
-			ValueAvg   float64 `json:"value_avg"`
+			ValueAvg  float64 `json:"value_avg"`
 			ValueSell float64 `json:"value_sell"`
 			ValueBuy  float64 `json:"value_buy"`
 		} `json:"blue"`

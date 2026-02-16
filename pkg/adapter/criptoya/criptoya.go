@@ -8,15 +8,15 @@ import (
 	"net/http"
 )
 
-type criptoyaRepository struct {
+type criptoyaAdapter struct {
 	URL string
 }
 
-func NewCriptoyaRepository(url string) repository.RateRepository {
-	return &criptoyaRepository{URL: url}
+func NewCriptoyaAdapter(url string) repository.RateRepository {
+	return &criptoyaAdapter{URL: url}
 }
 
-func (c *criptoyaRepository) GetRate() (*model.Rate, error) {
+func (c *criptoyaAdapter) GetRate() (*model.Rate, error) {
 	resp, err := http.Get(c.URL)
 	if err != nil {
 		return nil, err

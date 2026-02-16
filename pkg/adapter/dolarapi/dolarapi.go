@@ -7,15 +7,15 @@ import (
 	"net/http"
 )
 
-type dolarapiRepository struct{
+type dolarapiAdapter struct {
 	URL string
 }
 
-func NewDolarAPIRepository(url string) repository.RateRepository {
-	return &dolarapiRepository{URL: url}
+func NewDolarAPIAdapter(url string) repository.RateRepository {
+	return &dolarapiAdapter{URL: url}
 }
 
-func (d *dolarapiRepository) GetRate() (*model.Rate, error) {
+func (d *dolarapiAdapter) GetRate() (*model.Rate, error) {
 	resp, err := http.Get(d.URL)
 	if err != nil {
 		return nil, err

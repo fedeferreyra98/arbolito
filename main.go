@@ -33,9 +33,9 @@ func main() {
 	}
 
 	// Initialize adapters
-	dolarAPI := dolarapi.NewDolarAPIRepository(cfg.DolarAPIURL)
-	bluelyticsAPI := bluelytics.NewBluelyticsRepository(cfg.BluelyticsAPIURL)
-	criptoyaAPI := criptoya.NewCriptoyaRepository(cfg.CriptoyaAPIURL)
+	dolarAPI := dolarapi.NewDolarAPIAdapter(cfg.DolarAPIURL)
+	bluelyticsAPI := bluelytics.NewBluelyticsAdapter(cfg.BluelyticsAPIURL)
+	criptoyaAPI := criptoya.NewCriptoyaAdapter(cfg.CriptoyaAPIURL)
 
 	// Create a list of repositories
 	repos := []repository.RateRepository{

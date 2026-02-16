@@ -1,10 +1,11 @@
 package criptoya
 
 import (
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestCriptoyaAPI_GetRate(t *testing.T) {
@@ -14,7 +15,7 @@ func TestCriptoyaAPI_GetRate(t *testing.T) {
 	}))
 	defer server.Close()
 
-	api := NewCriptoyaRepository(server.URL)
+	api := NewCriptoyaAdapter(server.URL)
 	rate, err := api.GetRate()
 
 	assert.NoError(t, err)
@@ -29,7 +30,7 @@ func TestCriptoyaAPI_GetRate_Error(t *testing.T) {
 	}))
 	defer server.Close()
 
-	api := NewCriptoyaRepository(server.URL)
+	api := NewCriptoyaAdapter(server.URL)
 	rate, err := api.GetRate()
 
 	assert.Error(t, err)
