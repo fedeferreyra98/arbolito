@@ -13,14 +13,33 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	_ "arbolito/docs" // middleware for swagger
+
+	httpSwagger "github.com/swaggo/http-swagger"
 )
+
+// @title           Arbolito API
+// @version         1.0
+// @description     API for getting different dollar rates in Argentina.
+// @termsOfService  http://swagger.io/terms/
+
+// @contact.name   API Support
+// @contact.url    http://www.swagger.io/support
+// @contact.email  support@swagger.io
+
+// @license.name  Apache 2.0
+// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host      localhost:8080
+// @BasePath  /
 
 func main() {
 	// Load configuration
 	cfg := config.LoadConfig()
 
 	// Initialize MongoDB client
-	mongoClient, err := db.NewMongoClient(cfg.MongoURI)
+	mongoClient, err := db.NewMongoClient(cfg.MongoURI, cfg.MongoUser, cfg.MongoPassword)
 	if err != nil {
 		log.Fatalf("Failed to connect to MongoDB: %v", err)
 	}
@@ -55,6 +74,7 @@ func main() {
 		fmt.Fprintf(w, "Hello, World!")
 	})
 	http.HandleFunc("/dolar-blue", rateHandler.GetAverageRate)
+	http.Handle("/swagger/", httpSwagger.WrapHandler)
 
 	// Start server
 	port := fmt.Sprintf(":%s", cfg.ServerPort)

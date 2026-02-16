@@ -3,22 +3,26 @@ package config
 import "os"
 
 type Config struct {
-	DolarAPIURL     string
+	DolarAPIURL      string
 	BluelyticsAPIURL string
-	CriptoyaAPIURL  string
-	ServerPort      string
-	MongoURI        string
-	MongoDBName     string
+	CriptoyaAPIURL   string
+	ServerPort       string
+	MongoURI         string
+	MongoDBName      string
+	MongoUser        string
+	MongoPassword    string
 }
 
 func LoadConfig() *Config {
 	return &Config{
-		DolarAPIURL:     getEnv("DOLAR_API_URL", "https://dolarapi.com/v1/dolares/blue"),
+		DolarAPIURL:      getEnv("DOLAR_API_URL", "https://dolarapi.com/v1/dolares/blue"),
 		BluelyticsAPIURL: getEnv("BLUELYTICS_API_URL", "https://api.bluelytics.com.ar/v2/latest"),
-		CriptoyaAPIURL:  getEnv("CRIPTOYA_API_URL", "https://criptoya.com/api/dolar"),
-		ServerPort:      getEnv("SERVER_PORT", "8080"),
-		MongoURI:        getEnv("MONGO_URI", "mongodb://localhost:27017"),
-		MongoDBName:     getEnv("MONGO_DB_NAME", "arbolito"),
+		CriptoyaAPIURL:   getEnv("CRIPTOYA_API_URL", "https://criptoya.com/api/dolar"),
+		ServerPort:       getEnv("SERVER_PORT", "8080"),
+		MongoURI:         getEnv("MONGO_URI", "mongodb://localhost:27017"),
+		MongoDBName:      getEnv("MONGO_DB_NAME", "arbolito"),
+		MongoUser:        getEnv("MONGO_USER", "admin"),
+		MongoPassword:    getEnv("MONGO_PASSWORD", "password"),
 	}
 }
 
