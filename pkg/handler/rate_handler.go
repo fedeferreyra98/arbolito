@@ -20,7 +20,7 @@ func NewRateHandler(service service.RateService) *RateHandler {
 // @Tags         rates
 // @Accept       json
 // @Produce      json
-// @Success      200  {object}  map[string]float64
+// @Success      200  {object}  model.Rate
 // @Router       /dolar-blue [get]
 func (h *RateHandler) GetAverageRate(w http.ResponseWriter, r *http.Request) {
 	rate, err := h.service.GetAverageRate()
