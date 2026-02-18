@@ -11,7 +11,7 @@ import (
 func TestCriptoyaAPI_GetRate(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"bid": 140, "ask": 150}`))
+		w.Write([]byte(`{"blue": {"bid": 140, "ask": 150}}`))
 	}))
 	defer server.Close()
 
