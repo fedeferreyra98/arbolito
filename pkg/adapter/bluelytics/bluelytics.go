@@ -4,6 +4,7 @@ import (
 	"arbolito/pkg/model"
 	"arbolito/pkg/repository"
 	"encoding/json"
+	"log"
 	"net/http"
 )
 
@@ -16,8 +17,10 @@ func NewBluelyticsAdapter(url string) repository.RateApiAdapter {
 }
 
 func (b *bluelyticsAdapter) GetRate() (*model.Rate, error) {
+	log.Printf("Fetching rate from Bluelytics: %s", b.URL)
 	resp, err := http.Get(b.URL)
 	if err != nil {
+		log.Printf("Error fetching from Bluelytics: %v", err)
 		return nil, err
 	}
 	defer resp.Body.Close()
@@ -30,9 +33,11 @@ func (b *bluelyticsAdapter) GetRate() (*model.Rate, error) {
 		} `json:"blue"`
 	}
 	if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
+		log.Printf("Error decoding Bluelytics response: %v", err)
 		return nil, err
 	}
 
+	log.Printf("Successfully fetched rate from Bluelytics")
 	return &model.Rate{
 		Buy:  data.Blue.ValueBuy,
 		Sell: data.Blue.ValueSell,

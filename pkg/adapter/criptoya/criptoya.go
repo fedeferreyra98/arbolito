@@ -5,6 +5,7 @@ import (
 	"arbolito/pkg/repository"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 )
 
@@ -17,8 +18,10 @@ func NewCriptoyaAdapter(url string) repository.RateApiAdapter {
 }
 
 func (c *criptoyaAdapter) GetRate() (*model.Rate, error) {
+	log.Printf("Fetching rate from Criptoya: %s", c.URL)
 	resp, err := http.Get(c.URL)
 	if err != nil {
+		log.Printf("Error fetching from Criptoya: %v", err)
 		return nil, err
 	}
 	defer resp.Body.Close()
@@ -26,20 +29,31 @@ func (c *criptoyaAdapter) GetRate() (*model.Rate, error) {
 	var data map[string]interface{}
 
 	if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
+		log.Printf("Error decoding Criptoya response: %v", err)
 		return nil, err
 	}
 
-	// Assert the type of the values to float64
-	ask, ok := data["ask"].(float64)
+	// Access the "blue" key
+	blueData, ok := data["blue"].(map[string]interface{})
 	if !ok {
+		log.Printf("Failed to assert data['blue'] to map[string]interface{}")
+		return nil, fmt.Errorf("failed to assert data['blue'] to map[string]interface{}")
+	}
+
+	// Assert the type of the values to float64
+	ask, ok := blueData["ask"].(float64)
+	if !ok {
+		log.Printf("Failed to assert ask to float64")
 		return nil, fmt.Errorf("failed to assert ask to float64")
 	}
 
-	bid, ok := data["bid"].(float64)
+	bid, ok := blueData["bid"].(float64)
 	if !ok {
+		log.Printf("Failed to assert bid to float64")
 		return nil, fmt.Errorf("failed to assert bid to float64")
 	}
 
+	log.Printf("Successfully fetched rate from Criptoya")
 	return &model.Rate{
 		Buy:  bid,
 		Sell: ask,
