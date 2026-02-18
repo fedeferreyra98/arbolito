@@ -1,6 +1,11 @@
 package config
 
-import "os"
+import (
+	"log"
+	"os"
+
+	"github.com/joho/godotenv"
+)
 
 type Config struct {
 	DolarAPIURL      string
@@ -14,6 +19,11 @@ type Config struct {
 }
 
 func LoadConfig() *Config {
+	err := godotenv.Load()
+	if err != nil {
+		log.Println("Error loading .env file")
+	}
+
 	return &Config{
 		DolarAPIURL:      getEnv("DOLAR_API_URL", "https://dolarapi.com/v1/dolares/blue"),
 		BluelyticsAPIURL: getEnv("BLUELYTICS_API_URL", "https://api.bluelytics.com.ar/v2/latest"),
