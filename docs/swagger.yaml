@@ -1,0 +1,39 @@
+basePath: /
+definitions:
+  model.Rate:
+    properties:
+      buy:
+        type: number
+      sell:
+        type: number
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: API for getting different dollar rates in Argentina.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Arbolito API
+  version: "1.0"
+paths:
+  /dolar-blue:
+    get:
+      consumes:
+      - application/json
+      description: Get the average dollar rate from different sources
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Rate'
+      summary: Get average dollar rate
+      tags:
+      - rates
+swagger: "2.0"

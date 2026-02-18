@@ -1,0 +1,58 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API for getting different dollar rates in Argentina.",
+        "title": "Arbolito API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "API Support",
+            "url": "http://www.swagger.io/support",
+            "email": "support@swagger.io"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/dolar-blue": {
+            "get": {
+                "description": "Get the average dollar rate from different sources",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "rates"
+                ],
+                "summary": "Get average dollar rate",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Rate"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "model.Rate": {
+            "type": "object",
+            "properties": {
+                "buy": {
+                    "type": "number"
+                },
+                "sell": {
+                    "type": "number"
+                }
+            }
+        }
+    }
+}
