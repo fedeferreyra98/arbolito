@@ -1,0 +1,124 @@
+{
+    "info": {
+        "name": "Arbolito API",
+        "description": "A collection containing requests to test all endpoints of the Arbolito API.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Health Check",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{base_url}}/health",
+                    "host": [
+                        "{{base_url}}"
+                    ],
+                    "path": [
+                        "health"
+                    ]
+                },
+                "description": "Returns a simple OK health check."
+            },
+            "response": []
+        },
+        {
+            "name": "Get Dolar Blue",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{base_url}}/dolar-blue",
+                    "host": [
+                        "{{base_url}}"
+                    ],
+                    "path": [
+                        "dolar-blue"
+                    ]
+                },
+                "description": "Returns the aggregated Dolar Blue buy and sell rates."
+            },
+            "response": []
+        },
+        {
+            "name": "Get Dolar Oficial",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{base_url}}/dolar-oficial",
+                    "host": [
+                        "{{base_url}}"
+                    ],
+                    "path": [
+                        "dolar-oficial"
+                    ]
+                },
+                "description": "Returns the aggregated Dolar Oficial buy and sell rates."
+            },
+            "response": []
+        },
+        {
+            "name": "Get Dolar MEP",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{base_url}}/dolar-mep",
+                    "host": [
+                        "{{base_url}}"
+                    ],
+                    "path": [
+                        "dolar-mep"
+                    ]
+                },
+                "description": "Returns the aggregated Dolar MEP buy and sell rates."
+            },
+            "response": []
+        },
+        {
+            "name": "Get Dolar CCL",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{base_url}}/dolar-ccl",
+                    "host": [
+                        "{{base_url}}"
+                    ],
+                    "path": [
+                        "dolar-ccl"
+                    ]
+                },
+                "description": "Returns the aggregated Dolar CCL buy and sell rates."
+            },
+            "response": []
+        },
+        {
+            "name": "Get Dolar Tarjeta",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{base_url}}/dolar-tarjeta",
+                    "host": [
+                        "{{base_url}}"
+                    ],
+                    "path": [
+                        "dolar-tarjeta"
+                    ]
+                },
+                "description": "Returns the aggregated Dolar Tarjeta buy and sell rates."
+            },
+            "response": []
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:8080",
+            "type": "string"
+        }
+    ]
+}
