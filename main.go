@@ -70,8 +70,8 @@ func main() {
 	rateHandler := handler.NewRateHandler(rateService)
 
 	// Define routes
-	http.HandleFunc("/hello", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hello, World!")
+	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "OK")
 	})
 	http.HandleFunc("/dolar-blue", rateHandler.GetAverageRate)
 	http.Handle("/swagger/", httpSwagger.WrapHandler)
