@@ -73,6 +73,7 @@ func main() {
 	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "OK")
 	})
+	http.HandleFunc("/convert", rateHandler.Convert)
 	http.HandleFunc("/dolar-blue", rateHandler.GetBlueRate)
 	http.HandleFunc("/dolar-oficial", rateHandler.GetOficialRate)
 	http.HandleFunc("/dolar-mep", rateHandler.GetMepRate)

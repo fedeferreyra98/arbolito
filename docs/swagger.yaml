@@ -1,5 +1,20 @@
 basePath: /
 definitions:
+  model.ConversionResponse:
+    properties:
+      amount:
+        type: number
+      converted_amount:
+        type: number
+      from:
+        type: string
+      rate_applied:
+        type: number
+      rate_type:
+        type: string
+      to:
+        type: string
+    type: object
   model.Rate:
     properties:
       buy:
@@ -21,6 +36,43 @@ info:
   title: Arbolito API
   version: "1.0"
 paths:
+  /convert:
+    get:
+      consumes:
+      - application/json
+      description: Convert a specified amount from ARS to USD or USD to ARS using
+        a given rate type
+      parameters:
+      - description: Amount to convert
+        in: query
+        name: amount
+        required: true
+        type: number
+      - description: Currency to convert from (ARS, USD)
+        in: query
+        name: from
+        required: true
+        type: string
+      - description: Currency to convert to (ARS, USD)
+        in: query
+        name: to
+        required: true
+        type: string
+      - description: Type of dollar rate to use (e.g., blue, oficial)
+        in: query
+        name: rate_type
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ConversionResponse'
+      summary: Convert amount between ARS and USD
+      tags:
+      - rates
   /dolar-blue:
     get:
       consumes:
