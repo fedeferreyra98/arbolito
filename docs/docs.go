@@ -24,6 +24,59 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/convert": {
+            "get": {
+                "description": "Convert a specified amount from ARS to USD or USD to ARS using a given rate type",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "rates"
+                ],
+                "summary": "Convert amount between ARS and USD",
+                "parameters": [
+                    {
+                        "type": "number",
+                        "description": "Amount to convert",
+                        "name": "amount",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Currency to convert from (ARS, USD)",
+                        "name": "from",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Currency to convert to (ARS, USD)",
+                        "name": "to",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Type of dollar rate to use (e.g., blue, oficial)",
+                        "name": "rate_type",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.ConversionResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/dolar-blue": {
             "get": {
                 "description": "Get the blue dollar rate aggregated from different sources",
@@ -141,6 +194,29 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "model.ConversionResponse": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "converted_amount": {
+                    "type": "number"
+                },
+                "from": {
+                    "type": "string"
+                },
+                "rate_applied": {
+                    "type": "number"
+                },
+                "rate_type": {
+                    "type": "string"
+                },
+                "to": {
+                    "type": "string"
+                }
+            }
+        },
         "model.Rate": {
             "type": "object",
             "properties": {
