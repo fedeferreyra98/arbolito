@@ -16,8 +16,8 @@ func NewDolarAPIAdapter(url string) repository.RateApiAdapter {
 	return &dolarapiAdapter{URL: url}
 }
 
-func (d *dolarapiAdapter) GetRate() (*model.Rate, error) {
-	log.Printf("Fetching rate from DolarAPI: %s", d.URL)
+func (d *dolarapiAdapter) GetRates() (map[string]model.Rate, error) {
+	log.Printf("Fetching rates from DolarAPI: %s", d.URL)
 	resp, err := http.Get(d.URL)
 	if err != nil {
 		log.Printf("Error fetching from DolarAPI: %v", err)
@@ -25,7 +25,8 @@ func (d *dolarapiAdapter) GetRate() (*model.Rate, error) {
 	}
 	defer resp.Body.Close()
 
-	var data struct {
+	var data []struct {
+		Casa   string  `json:"casa"`
 		Compra float64 `json:"compra"`
 		Venta  float64 `json:"venta"`
 	}
@@ -34,9 +35,29 @@ func (d *dolarapiAdapter) GetRate() (*model.Rate, error) {
 		return nil, err
 	}
 
-	log.Printf("Successfully fetched rate from DolarAPI")
-	return &model.Rate{
-		Buy:  data.Compra,
-		Sell: data.Venta,
-	}, nil
+	rates := make(map[string]model.Rate)
+	for _, item := range data {
+		key := ""
+		switch item.Casa {
+		case "oficial":
+			key = "oficial"
+		case "blue":
+			key = "blue"
+		case "bolsa":
+			key = "mep"
+		case "contadoconliqui":
+			key = "ccl"
+		case "tarjeta":
+			key = "tarjeta"
+		}
+		if key != "" {
+			rates[key] = model.Rate{
+				Buy:  item.Compra,
+				Sell: item.Venta,
+			}
+		}
+	}
+
+	log.Printf("Successfully fetched rates from DolarAPI")
+	return rates, nil
 }

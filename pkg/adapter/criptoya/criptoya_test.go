@@ -11,17 +11,22 @@ import (
 func TestCriptoyaAPI_GetRate(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"blue": {"bid": 140, "ask": 150}}`))
+		w.Write([]byte(`{"blue": {"bid": 140, "ask": 150}, "oficial": {"bid": 100, "ask": 110}, "tarjeta": {"price": 180}, "mep": {"al30": {"24hs": {"price": 130}}}, "ccl": {"al30": {"24hs": {"price": 120}}}}`))
 	}))
 	defer server.Close()
 
 	api := NewCriptoyaAdapter(server.URL)
-	rate, err := api.GetRate()
+	rates, err := api.GetRates()
 
 	assert.NoError(t, err)
-	assert.NotNil(t, rate)
-	assert.Equal(t, 140.0, rate.Buy)
-	assert.Equal(t, 150.0, rate.Sell)
+	assert.NotNil(t, rates)
+	assert.Equal(t, 140.0, rates["blue"].Buy)
+	assert.Equal(t, 150.0, rates["blue"].Sell)
+	assert.Equal(t, 100.0, rates["oficial"].Buy)
+	assert.Equal(t, 110.0, rates["oficial"].Sell)
+	assert.Equal(t, 180.0, rates["tarjeta"].Buy)
+	assert.Equal(t, 130.0, rates["mep"].Buy)
+	assert.Equal(t, 120.0, rates["ccl"].Buy)
 }
 
 func TestCriptoyaAPI_GetRate_Error(t *testing.T) {
@@ -31,8 +36,8 @@ func TestCriptoyaAPI_GetRate_Error(t *testing.T) {
 	defer server.Close()
 
 	api := NewCriptoyaAdapter(server.URL)
-	rate, err := api.GetRate()
+	rates, err := api.GetRates()
 
 	assert.Error(t, err)
-	assert.Nil(t, rate)
+	assert.Nil(t, rates)
 }

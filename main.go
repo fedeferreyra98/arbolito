@@ -73,7 +73,11 @@ func main() {
 	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "OK")
 	})
-	http.HandleFunc("/dolar-blue", rateHandler.GetAverageRate)
+	http.HandleFunc("/dolar-blue", rateHandler.GetBlueRate)
+	http.HandleFunc("/dolar-oficial", rateHandler.GetOficialRate)
+	http.HandleFunc("/dolar-mep", rateHandler.GetMepRate)
+	http.HandleFunc("/dolar-ccl", rateHandler.GetCclRate)
+	http.HandleFunc("/dolar-tarjeta", rateHandler.GetTarjetaRate)
 	http.Handle("/swagger/", httpSwagger.WrapHandler)
 
 	// Start server

@@ -3,6 +3,6 @@ package repository
 import "arbolito/pkg/model"
 
 type CachingRepository interface {
-	GetRate() (*model.CachedRate, error)
-	SetRate(*model.Rate) error
+	GetRates() (*model.CachedRates, error)
+	SetRates(rates map[string]model.Rate) error
 }

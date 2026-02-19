@@ -16,8 +16,8 @@ func NewBluelyticsAdapter(url string) repository.RateApiAdapter {
 	return &bluelyticsAdapter{URL: url}
 }
 
-func (b *bluelyticsAdapter) GetRate() (*model.Rate, error) {
-	log.Printf("Fetching rate from Bluelytics: %s", b.URL)
+func (b *bluelyticsAdapter) GetRates() (map[string]model.Rate, error) {
+	log.Printf("Fetching rates from Bluelytics: %s", b.URL)
 	resp, err := http.Get(b.URL)
 	if err != nil {
 		log.Printf("Error fetching from Bluelytics: %v", err)
@@ -31,15 +31,27 @@ func (b *bluelyticsAdapter) GetRate() (*model.Rate, error) {
 			ValueSell float64 `json:"value_sell"`
 			ValueBuy  float64 `json:"value_buy"`
 		} `json:"blue"`
+		Oficial struct {
+			ValueAvg  float64 `json:"value_avg"`
+			ValueSell float64 `json:"value_sell"`
+			ValueBuy  float64 `json:"value_buy"`
+		} `json:"oficial"`
 	}
 	if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
 		log.Printf("Error decoding Bluelytics response: %v", err)
 		return nil, err
 	}
 
-	log.Printf("Successfully fetched rate from Bluelytics")
-	return &model.Rate{
+	rates := make(map[string]model.Rate)
+	rates["blue"] = model.Rate{
 		Buy:  data.Blue.ValueBuy,
 		Sell: data.Blue.ValueSell,
-	}, nil
+	}
+	rates["oficial"] = model.Rate{
+		Buy:  data.Oficial.ValueBuy,
+		Sell: data.Oficial.ValueSell,
+	}
+
+	log.Printf("Successfully fetched rates from Bluelytics")
+	return rates, nil
 }

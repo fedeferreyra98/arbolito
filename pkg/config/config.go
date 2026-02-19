@@ -25,7 +25,7 @@ func LoadConfig() *Config {
 	}
 
 	return &Config{
-		DolarAPIURL:      getEnv("DOLAR_API_URL", "https://dolarapi.com/v1/dolares/blue"),
+		DolarAPIURL:      getEnv("DOLAR_API_URL", "https://dolarapi.com/v1/dolares"),
 		BluelyticsAPIURL: getEnv("BLUELYTICS_API_URL", "https://api.bluelytics.com.ar/v2/latest"),
 		CriptoyaAPIURL:   getEnv("CRIPTOYA_API_URL", "https://criptoya.com/api/dolar"),
 		ServerPort:       getEnv("SERVER_PORT", "8080"),
