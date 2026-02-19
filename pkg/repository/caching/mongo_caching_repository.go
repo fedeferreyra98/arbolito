@@ -29,44 +29,44 @@ func NewMongoCachingRepository(db *mongo.Database) (repository.CachingRepository
 	return repo, nil
 }
 
-func (r *mongoCachingRepository) GetRate() (*model.CachedRate, error) {
-	var cachedRate model.CachedRate
+func (r *mongoCachingRepository) GetRates() (*model.CachedRates, error) {
+	var cachedRates model.CachedRates
 	collection := r.db.Collection(collectionName)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	// Find the most recent entry
 	opts := options.FindOne().SetSort(bson.D{{"created_at", -1}})
-	err := collection.FindOne(ctx, bson.D{}, opts).Decode(&cachedRate)
+	err := collection.FindOne(ctx, bson.D{}, opts).Decode(&cachedRates)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			log.Printf("Cache miss: no rate found in cache")
+			log.Printf("Cache miss: no rates found in cache")
 			return nil, nil // No documents found is not an error here
 		}
-		log.Printf("Error retrieving rate from cache: %v", err)
+		log.Printf("Error retrieving rates from cache: %v", err)
 		return nil, err
 	}
-	log.Printf("Cache hit: retrieved rate from cache (created at %v)", cachedRate.CreatedAt)
-	return &cachedRate, nil
+	log.Printf("Cache hit: retrieved rates from cache (created at %v)", cachedRates.CreatedAt)
+	return &cachedRates, nil
 }
 
-func (r *mongoCachingRepository) SetRate(rate *model.Rate) error {
-	log.Printf("Setting rate in cache")
+func (r *mongoCachingRepository) SetRates(rates map[string]model.Rate) error {
+	log.Printf("Setting rates in cache")
 	collection := r.db.Collection(collectionName)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	cachedRate := model.CachedRate{
-		Rate:      *rate,
+	cachedRates := model.CachedRates{
+		Rates:     rates,
 		CreatedAt: time.Now(),
 	}
 
-	_, err := collection.InsertOne(ctx, cachedRate)
+	_, err := collection.InsertOne(ctx, cachedRates)
 	if err != nil {
-		log.Printf("Error setting rate in cache: %v", err)
+		log.Printf("Error setting rates in cache: %v", err)
 		return err
 	}
-	log.Printf("Successfully set rate in cache")
+	log.Printf("Successfully set rates in cache")
 	return nil
 }
 

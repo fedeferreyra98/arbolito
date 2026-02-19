@@ -25,7 +25,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Get the average dollar rate from different sources
+      description: Get the blue dollar rate aggregated from different sources
       produces:
       - application/json
       responses:
@@ -33,7 +33,67 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/model.Rate'
-      summary: Get average dollar rate
+      summary: Get blue dollar rate
+      tags:
+      - rates
+  /dolar-ccl:
+    get:
+      consumes:
+      - application/json
+      description: Get the CCL dollar rate aggregated from different sources
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Rate'
+      summary: Get CCL dollar rate
+      tags:
+      - rates
+  /dolar-mep:
+    get:
+      consumes:
+      - application/json
+      description: Get the MEP dollar rate aggregated from different sources
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Rate'
+      summary: Get MEP dollar rate
+      tags:
+      - rates
+  /dolar-oficial:
+    get:
+      consumes:
+      - application/json
+      description: Get the oficial dollar rate aggregated from different sources
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Rate'
+      summary: Get oficial dollar rate
+      tags:
+      - rates
+  /dolar-tarjeta:
+    get:
+      consumes:
+      - application/json
+      description: Get the tarjeta dollar rate aggregated from different sources
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Rate'
+      summary: Get Tarjeta dollar rate
       tags:
       - rates
 swagger: "2.0"

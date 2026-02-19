@@ -5,7 +5,7 @@ Arbolito is a Go-based API designed to aggregate and provide the average "Dolar 
 ## Purpose
 
 The main purpose of this API is to:
-- Fetch Dolar Blue rates from various external APIs (DolarAPI, Bluelytics, Criptoya).
+- Fetch multiple dollar rates (Blue, Oficial, MEP, CCL, Tarjeta) from various external APIs (DolarAPI, Bluelytics, Criptoya).
 - Calculate an average rate from these sources.
 - Provide a reliable and cached response to minimize latency and external dependency usage.
 
@@ -26,10 +26,10 @@ The main purpose of this API is to:
 - **Method**: `GET`
 - **Description**: Returns a simple "OK" to indicate the service is running.
 
-### Get Average Dolar Blue Rate
-- **URL**: `/dolar-blue`
+### Get Dollar Rates
+- **URLs**: `/dolar-blue`, `/dolar-oficial`, `/dolar-mep`, `/dolar-ccl`, `/dolar-tarjeta`
 - **Method**: `GET`
-- **Description**: Returns the calculated average Dolar Blue rate (buy and sell) from the configured sources.
+- **Description**: Returns the calculated average dollar rate (buy and sell) for the specified quote type, aggregating configured sources that provide it.
 
 ### Swagger Documentation
 - **URL**: `/swagger/index.html`
@@ -45,7 +45,7 @@ The application uses an `.env` file for configuration. The following environment
 | `SERVER_PORT` | Port where the API will listen | `8080` |
 | `MONGO_URI` | MongoDB connection URI | `mongodb://localhost:27017` |
 | `MONGO_DB_NAME` | Name of the MongoDB database | `arbolito` |
-| `DOLAR_API_URL` | URL for DolarAPI source | `https://dolarapi.com/v1/dolares/blue` |
+| `DOLAR_API_URL` | URL for DolarAPI source | `https://dolarapi.com/v1/dolares` |
 | `BLUELYTICS_API_URL` | URL for Bluelytics source | `https://api.bluelytics.com.ar/v2/latest` |
 | `CRIPTOYA_API_URL` | URL for Criptoya source | `https://criptoya.com/api/dolar` |
 | `MONGO_USER` | MongoDB username (optional) | `admin` |

@@ -4,7 +4,6 @@ import (
 	"arbolito/pkg/model"
 	"arbolito/pkg/repository"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 )
@@ -17,8 +16,8 @@ func NewCriptoyaAdapter(url string) repository.RateApiAdapter {
 	return &criptoyaAdapter{URL: url}
 }
 
-func (c *criptoyaAdapter) GetRate() (*model.Rate, error) {
-	log.Printf("Fetching rate from Criptoya: %s", c.URL)
+func (c *criptoyaAdapter) GetRates() (map[string]model.Rate, error) {
+	log.Printf("Fetching rates from Criptoya: %s", c.URL)
 	resp, err := http.Get(c.URL)
 	if err != nil {
 		log.Printf("Error fetching from Criptoya: %v", err)
@@ -33,29 +32,42 @@ func (c *criptoyaAdapter) GetRate() (*model.Rate, error) {
 		return nil, err
 	}
 
-	// Access the "blue" key
-	blueData, ok := data["blue"].(map[string]interface{})
-	if !ok {
-		log.Printf("Failed to assert data['blue'] to map[string]interface{}")
-		return nil, fmt.Errorf("failed to assert data['blue'] to map[string]interface{}")
+	rates := make(map[string]model.Rate)
+
+	extractSimple := func(key string) {
+		if rateData, ok := data[key].(map[string]interface{}); ok {
+			ask, _ := rateData["ask"].(float64)
+			bid, _ := rateData["bid"].(float64)
+			if ask == 0 && bid == 0 {
+				price, _ := rateData["price"].(float64)
+				ask = price
+				bid = price
+			}
+			if ask > 0 || bid > 0 {
+				rates[key] = model.Rate{Buy: bid, Sell: ask}
+			}
+		}
 	}
 
-	// Assert the type of the values to float64
-	ask, ok := blueData["ask"].(float64)
-	if !ok {
-		log.Printf("Failed to assert ask to float64")
-		return nil, fmt.Errorf("failed to assert ask to float64")
+	extractSimple("blue")
+	extractSimple("oficial")
+	extractSimple("tarjeta")
+
+	extractComplex := func(key string) {
+		if rateData, ok := data[key].(map[string]interface{}); ok {
+			if al30, ok := rateData["al30"].(map[string]interface{}); ok {
+				if d24hs, ok := al30["24hs"].(map[string]interface{}); ok {
+					if price, ok := d24hs["price"].(float64); ok {
+						rates[key] = model.Rate{Buy: price, Sell: price}
+					}
+				}
+			}
+		}
 	}
 
-	bid, ok := blueData["bid"].(float64)
-	if !ok {
-		log.Printf("Failed to assert bid to float64")
-		return nil, fmt.Errorf("failed to assert bid to float64")
-	}
+	extractComplex("mep")
+	extractComplex("ccl")
 
-	log.Printf("Successfully fetched rate from Criptoya")
-	return &model.Rate{
-		Buy:  bid,
-		Sell: ask,
-	}, nil
+	log.Printf("Successfully fetched rates from Criptoya")
+	return rates, nil
 }

@@ -26,7 +26,7 @@ const docTemplate = `{
     "paths": {
         "/dolar-blue": {
             "get": {
-                "description": "Get the average dollar rate from different sources",
+                "description": "Get the blue dollar rate aggregated from different sources",
                 "consumes": [
                     "application/json"
                 ],
@@ -36,7 +36,99 @@ const docTemplate = `{
                 "tags": [
                     "rates"
                 ],
-                "summary": "Get average dollar rate",
+                "summary": "Get blue dollar rate",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Rate"
+                        }
+                    }
+                }
+            }
+        },
+        "/dolar-ccl": {
+            "get": {
+                "description": "Get the CCL dollar rate aggregated from different sources",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "rates"
+                ],
+                "summary": "Get CCL dollar rate",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Rate"
+                        }
+                    }
+                }
+            }
+        },
+        "/dolar-mep": {
+            "get": {
+                "description": "Get the MEP dollar rate aggregated from different sources",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "rates"
+                ],
+                "summary": "Get MEP dollar rate",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Rate"
+                        }
+                    }
+                }
+            }
+        },
+        "/dolar-oficial": {
+            "get": {
+                "description": "Get the oficial dollar rate aggregated from different sources",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "rates"
+                ],
+                "summary": "Get oficial dollar rate",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Rate"
+                        }
+                    }
+                }
+            }
+        },
+        "/dolar-tarjeta": {
+            "get": {
+                "description": "Get the tarjeta dollar rate aggregated from different sources",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "rates"
+                ],
+                "summary": "Get Tarjeta dollar rate",
                 "responses": {
                     "200": {
                         "description": "OK",

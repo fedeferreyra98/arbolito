@@ -11,64 +11,67 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-func TestRateService_GetAverageRate_FromCache(t *testing.T) {
-	mockCachingRepo := new(mocks.MockCachingRepository)
-	cachedRate := &model.CachedRate{
-		Rate:      model.Rate{Buy: 100, Sell: 110},
-		CreatedAt: time.Now(),
-	}
-	mockCachingRepo.On("GetRate").Return(cachedRate, nil)
-
-	service := NewRateService(nil, mockCachingRepo)
-	rate, err := service.GetAverageRate()
-
-	assert.NoError(t, err)
-	assert.Equal(t, cachedRate.Rate, *rate)
-	mockCachingRepo.AssertExpectations(t)
-}
-
-func TestRateService_GetAverageRate_FromAPI(t *testing.T) {
+func TestRateService_LoadAndCacheAllRates(t *testing.T) {
 	mockRateRepo1 := new(mocks.MockRateRepository)
 	mockRateRepo2 := new(mocks.MockRateRepository)
 	mockCachingRepo := new(mocks.MockCachingRepository)
 
 	repos := []repository.RateApiAdapter{mockRateRepo1, mockRateRepo2}
 
-	mockRateRepo1.On("GetRate").Return(&model.Rate{Buy: 100, Sell: 110}, nil)
-	mockRateRepo2.On("GetRate").Return(&model.Rate{Buy: 102, Sell: 112}, nil)
-	mockCachingRepo.On("GetRate").Return(nil, nil)
-	mockCachingRepo.On("SetRate", mock.Anything).Return(nil)
+	mockRateRepo1.On("GetRates").Return(map[string]model.Rate{"blue": {Buy: 100, Sell: 110}}, nil)
+	mockRateRepo2.On("GetRates").Return(map[string]model.Rate{"blue": {Buy: 102, Sell: 112}, "oficial": {Buy: 90, Sell: 95}}, nil)
+	mockCachingRepo.On("SetRates", mock.Anything).Return(nil)
 
 	service := NewRateService(repos, mockCachingRepo)
-	rate, err := service.GetAverageRate()
+	rates, err := service.LoadAndCacheAllRates()
 
 	assert.NoError(t, err)
-	assert.NotNil(t, rate)
-	assert.Equal(t, 101.0, rate.Buy)
-	assert.Equal(t, 111.0, rate.Sell)
+	assert.NotNil(t, rates)
+	assert.Equal(t, 101.0, rates["blue"].Buy)
+	assert.Equal(t, 111.0, rates["blue"].Sell)
+	assert.Equal(t, 90.0, rates["oficial"].Buy)
+	assert.Equal(t, 95.0, rates["oficial"].Sell)
 
 	mockRateRepo1.AssertExpectations(t)
 	mockRateRepo2.AssertExpectations(t)
 	mockCachingRepo.AssertExpectations(t)
 }
 
-func TestRateService_GetAverageRate_CacheExpired(t *testing.T) {
+func TestRateService_GetRateByType_FromCache(t *testing.T) {
+	mockCachingRepo := new(mocks.MockCachingRepository)
+	cachedRates := &model.CachedRates{
+		Rates:     map[string]model.Rate{"blue": {Buy: 100, Sell: 110}},
+		CreatedAt: time.Now(),
+	}
+	mockCachingRepo.On("GetRates").Return(cachedRates, nil)
+
+	service := NewRateService(nil, mockCachingRepo)
+	rate, err := service.GetRateByType("blue")
+
+	assert.NoError(t, err)
+	assert.NotNil(t, rate)
+	assert.Equal(t, 100.0, rate.Buy)
+	assert.Equal(t, 110.0, rate.Sell)
+	mockCachingRepo.AssertExpectations(t)
+}
+
+func TestRateService_GetRateByType_CacheExpired(t *testing.T) {
 	mockRateRepo := new(mocks.MockRateRepository)
 	mockCachingRepo := new(mocks.MockCachingRepository)
 
 	repos := []repository.RateApiAdapter{mockRateRepo}
 
-	cachedRate := &model.CachedRate{
-		Rate:      model.Rate{Buy: 100, Sell: 110},
+	cachedRates := &model.CachedRates{
+		Rates:     map[string]model.Rate{"blue": {Buy: 100, Sell: 110}},
 		CreatedAt: time.Now().Add(-20 * time.Minute),
 	}
 
-	mockCachingRepo.On("GetRate").Return(cachedRate, nil)
-	mockRateRepo.On("GetRate").Return(&model.Rate{Buy: 120, Sell: 130}, nil)
-	mockCachingRepo.On("SetRate", mock.Anything).Return(nil)
+	mockCachingRepo.On("GetRates").Return(cachedRates, nil)
+	mockRateRepo.On("GetRates").Return(map[string]model.Rate{"blue": {Buy: 120, Sell: 130}}, nil)
+	mockCachingRepo.On("SetRates", mock.Anything).Return(nil)
 
 	service := NewRateService(repos, mockCachingRepo)
-	rate, err := service.GetAverageRate()
+	rate, err := service.GetRateByType("blue")
 
 	assert.NoError(t, err)
 	assert.NotNil(t, rate)
